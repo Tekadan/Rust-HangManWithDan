@@ -1,83 +1,83 @@
 use std::io;
 
-fn main() -> bool {
-    return game_loop();
+fn main() {
+    let game_result: bool = game_loop();
 }
 
 fn game_loop() -> bool {
     // Game startup
     println!("Welcome to Hangman, with Dan!");
 
-    let mut remainingGuesses: i32 = set_difficulty();
+    let mut remaining_guesses: i32 = set_difficulty();
     // Word the player will be guessing
     let phrase = "hello world".to_string();
-    let mut displayString = String::new();
+    let mut display_string = String::new();
 
     // Create the '___ __ _____' format
     for c in phrase.chars() {
         if c != ' ' {
-            displayString = displayString + "_";
+            display_string = display_string + "_";
         }else{
-            displayString = displayString + " ";
+            display_string = display_string + " ";
         }
     }
 
     // Game Loop
-    let mut isWinner: bool = false;
-    while remainingGuesses > 0 || isWinner {
-        println!("Only {} guesses remaining!", &remainingGuesses);
+    let mut is_winner: bool = false;
+    while remaining_guesses > 0 || is_winner {
+        println!("Only {} guesses remaining!", &remaining_guesses);
 
         let mut guess = String::new();
         io::stdin().read_line(&mut guess).expect("Input parse failed!");
         // Convert string input to char
-        let letter: char = guess.chars().nth(0);
+        let letter: char = guess.chars().nth(0).unwrap();
 
-        let foundMatch: bool = false;
+        let mut found_match: bool = false;
     
         // See if we have a match in the string
         for c in phrase.chars() {
             if letter == c {
-                foundMatch = true;
+                found_match = true;
                 // TODO: Replace char in 'displayString' here.
             }
         }
 
         // Oops, wrong answer
-        if !foundMatch {
+        if !found_match {
             println!("No match found!");
-            remainingGuesses = remainingGuesses - 1;
+            remaining_guesses = remaining_guesses - 1;
         } else {
             // Check for win condition
-            let winCheck: bool = true;
-            for c in displayString.chars() {
+            let mut win_check: bool = true;
+            for c in display_string.chars() {
                 // if there is an underscore left, there is still room to guess!
                 if c == '_' {
-                    winCheck = false;
+                    win_check = false;
                     break;
                 }
             }
-            if winCheck {
-                isWinner = true;
+            if win_check {
+                is_winner = true;
                 break;
             }
         }
     }
 
     // End Game!
-    return end_game(isWinner, phrase);
+    return end_game(is_winner, phrase);
 }
 
 fn set_difficulty() -> i32 {
 
-    let difficulty: u32;
+    let mut difficulty: u32;
 
     loop {
         println!("Please select your difficulty: 1 for Easy, 2 for Medium, 3 for Hard");
         
-        let mut difficultyInput = String::new();
-        io::stdin().read_line(&mut difficultyInput).expect("Input parse failed!");
+        let mut difficulty_input = String::new();
+        io::stdin().read_line(&mut difficulty_input).expect("Input parse failed!");
 
-        difficulty = match difficultyInput.trim().parse() {
+        difficulty = match difficulty_input.trim().parse() {
             Ok(num) => num,
             Err(_) => continue,
         };
