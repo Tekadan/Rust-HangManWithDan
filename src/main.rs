@@ -40,7 +40,6 @@ fn game_loop() -> bool {
         for (i, c) in phrase.chars().enumerate() {
             if letter == c {
                 found_match = true;
-                // TODO: Replace char in 'display_string' here.
                 display_string.remove(i);
                 display_string.insert(i, c);
             }
