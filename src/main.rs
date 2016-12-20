@@ -38,6 +38,7 @@ fn game_loop() -> bool {
         for c in phrase.chars() {
             if letter == c {
                 foundMatch = true;
+                // TODO: Replace char in 'displayString' here.
             }
         }
 
