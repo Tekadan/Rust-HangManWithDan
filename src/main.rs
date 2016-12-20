@@ -26,6 +26,7 @@ fn game_loop() -> bool {
     let mut is_winner: bool = false;
     while remaining_guesses > 0 || is_winner {
         println!("Only {} guesses remaining!", &remaining_guesses);
+        println!("{}", &display_string);
 
         let mut guess = String::new();
         io::stdin().read_line(&mut guess).expect("Input parse failed!");
@@ -35,10 +36,12 @@ fn game_loop() -> bool {
         let mut found_match: bool = false;
     
         // See if we have a match in the string
-        for c in phrase.chars() {
+        for (i, c) in phrase.chars().enumerate() {
             if letter == c {
                 found_match = true;
-                // TODO: Replace char in 'displayString' here.
+                // TODO: Replace char in 'display_string' here.
+                display_string.remove(i);
+                display_string.insert(i, c);
             }
         }
 
@@ -61,6 +64,7 @@ fn game_loop() -> bool {
                 break;
             }
         }
+        println!("\n");
     }
 
     // End Game!
@@ -87,15 +91,18 @@ fn set_difficulty() -> i32 {
         } else if difficulty < 1 {
             println!("Too small!");
         }else{
-            continue;
+            break;
         }
     }
 
     if difficulty == 1 {
+        println!("Easy Selected! Total Guesses: 6");
         return 6;
     }else if difficulty == 2 {
+        println!("Easy Selected! Total Guesses: 4");
         return 4;
     } else {
+        println!("Easy Selected! Total Guesses: 2");
         return 2;
     }
 }
@@ -107,7 +114,7 @@ fn end_game(result: bool, phrase: String) -> bool{
         return true;
     } else{
         println!("You lose!");
-        println!("The phrase was: {}.", &phrase);
+        println!("The phrase was: {}", &phrase);
         return false;
     }
 }
