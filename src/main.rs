@@ -8,7 +8,7 @@ fn game_loop() -> bool {
     // Game startup
     println!("Welcome to Hangman, with Dan!");
 
-    let mut remaining_guesses: i32 = set_difficulty();
+    let mut remaining_guesses: u32 = set_difficulty();
     // Word the player will be guessing
     let phrase = "hello world".to_string();
 
@@ -18,8 +18,8 @@ fn game_loop() -> bool {
     // Game Loop
     let mut is_winner: bool = false;
     while remaining_guesses > 0 || is_winner {
-        println!("Only {} guesses remaining!", &remaining_guesses);
-        println!("{}", &display_string);
+        // Display to the Player the current state of the game
+        output_game_state(remaining_guesses.clone(), display_string.clone());
 
         let mut guess = String::new();
         io::stdin().read_line(&mut guess).expect("Input parse failed!");
@@ -65,7 +65,8 @@ fn game_loop() -> bool {
     return end_game(is_winner, phrase);
 }
 
-fn set_difficulty() -> i32 {
+// Allows the player to select their difficulty
+fn set_difficulty() -> u32 {
 
     let mut difficulty: u32;
 
@@ -101,6 +102,7 @@ fn set_difficulty() -> i32 {
     }
 }
 
+// Converts a regular alphabetic string to a hangman string
 fn create_hangman_string(phrase: String) -> String {
     let phrase_clone = phrase;
     let mut display_string = String::new();
@@ -116,6 +118,13 @@ fn create_hangman_string(phrase: String) -> String {
     return display_string;
 }
 
+// Displays the current state of the hangman game
+fn output_game_state(remaining_guesses: u32, display_string: String) {
+    println!("Only {} guesses remaining!", &remaining_guesses);
+    println!("{}", &display_string);
+}
+
+// Checks the display string to see if there are any unknown characters left
 fn winner_check(display_string_clone: String) -> bool {
     let mut win_check: bool = true;
     for c in display_string_clone.chars() {
@@ -128,6 +137,7 @@ fn winner_check(display_string_clone: String) -> bool {
     return win_check;
 }
 
+// Used to display the end results of the game - winner or loser
 fn end_game(result: bool, phrase: String) -> bool {
     if result {
         println!("You win!");
